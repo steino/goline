@@ -36,6 +36,7 @@ type GoLine struct {
 	prompter       Prompter
 	runeHandlers   map[rune]Handler
 	escapeHandlers map[escapeCode]Handler
+	completion     Completion
 	DefaultHandler Handler
 	LastPrompt     string
 	CurLine        []rune
@@ -81,6 +82,7 @@ func NewGoLine(p Prompter) *GoLine {
 	l.AddHandler(CHAR_CTRLT, SwapWithPreviousChar)
 
 	SetupHistory(l)
+	SetupCompletion(l)
 
 	//	l.DefaultHandler = DefaultHandler
 	return l
@@ -108,6 +110,8 @@ func (l *GoLine) RefreshLine() {
 
 // Inserts the unicode character r at the current position on the line
 func (l *GoLine) InsertRune(r rune) {
+	l.ResetCompletion()
+
 	if l.Len == l.Position {
 		l.CurLine[l.Position] = r
 		l.Position++

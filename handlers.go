@@ -21,6 +21,7 @@ func findNextWord(t []rune, end, max int) int {
 }
 
 func Finish(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	return true, nil
 }
 
@@ -29,6 +30,8 @@ func UserTerminated(l *GoLine) (bool, error) {
 }
 
 func Backspace(l *GoLine) (bool, error) {
+	l.ResetCompletion()
+
 	if l.Len > 0 && l.Position > 0 {
 		l.CurLine = append(l.CurLine[:l.Position-1], l.CurLine[l.Position:]...)
 		l.Len--
@@ -63,6 +66,7 @@ func MoveRight(l *GoLine) (bool, error) {
 }
 
 func DeleteLine(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	l.CurLine = make([]rune, MAX_LINE)
 	l.Position = 0
 	l.Len = 0
@@ -70,12 +74,14 @@ func DeleteLine(l *GoLine) (bool, error) {
 }
 
 func DeleteRestofLine(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	copy(l.CurLine, l.CurLine[:l.Position])
 	l.Len = l.Position
 	return false, nil
 }
 
 func DeleteLastWord(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	prev_position := l.Position
 	l.Position = findLastWord(l.CurLine, l.Position)
 	copy(l.CurLine, append(l.CurLine[:l.Position], l.CurLine[prev_position:l.Len]...))
@@ -84,6 +90,7 @@ func DeleteLastWord(l *GoLine) (bool, error) {
 }
 
 func DeleteNextWord(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	end := findNextWord(l.CurLine, l.Position, l.Len)
 	copy(l.CurLine, append(l.CurLine[:l.Position], l.CurLine[end:l.Len]...))
 	l.Len -= end - l.Position
@@ -91,6 +98,7 @@ func DeleteNextWord(l *GoLine) (bool, error) {
 }
 
 func DeleteCurrentChar(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	if l.Position < l.Len {
 		l.CurLine = append(l.CurLine[:l.Position], l.CurLine[l.Position+1:]...)
 		l.Len--
@@ -123,6 +131,7 @@ func MoveEndofLine(l *GoLine) (bool, error) {
 }
 
 func ClearScreen(l *GoLine) (bool, error) {
+	l.ResetCompletion()
 	l.ClearScreen()
 	return false, nil
 }

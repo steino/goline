@@ -16,6 +16,7 @@ const (
 	CHAR_CTRLE     rune = 5
 	CHAR_CTRLF     rune = 6
 	CHAR_CTRLH     rune = 8
+	CHAR_TAB       rune = 9
 	CHAR_CTRLK     rune = 11
 	CHAR_CTRLL     rune = 12
 	CHAR_ENTER     rune = 13
